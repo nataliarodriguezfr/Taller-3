@@ -18,5 +18,35 @@ print(df.head())
 #grafico de linea con la anomalia de temperatura promedio y tiempo
 
 #grafico promedios de estacion
+# Seleccionar las columnas de estaciones
+estaciones = ['DJF', 'MAM', 'JJA', 'SON']
+
+plt.figure(figsize=(14,7))
+
+# Graficar cada estación
+for estacion in estaciones:
+    plt.plot(df.index, df[estacion], label=estacion)
+
+plt.title('Anomalía de temperatura promedio por estación (1880 - Último año disponible)')
+plt.xlabel('Año')
+plt.ylabel('Anomalía de temperatura (°C)')
+plt.legend(title='Estaciones')
+plt.grid(True)
+plt.show()
+
 
 #grafico con promedios de anomalias mensuales
+
+
+#Promedios anomalias anuales
+
+columna_anual = 'J-D'
+
+plt.figure(figsize=(12,6))
+plt.plot(df.index, df[columna_anual], label='Anomalía anual promedio (J-D)', color='darkblue')
+plt.title('Anomalía de temperatura anual promedio (1880 - Último año disponible)')
+plt.xlabel('Año')
+plt.ylabel('Anomalía de temperatura (°C)')
+plt.grid(True)
+plt.legend()
+plt.show()
