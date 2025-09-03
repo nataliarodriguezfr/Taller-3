@@ -17,3 +17,6 @@ print(df.head())
 
 #grafico de linea con la anomalia de temperatura promedio y tiempo
 
+#grafico promedios de estacion
+
+#grafico con promedios de anomalias mensuales
