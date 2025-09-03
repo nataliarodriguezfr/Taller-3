@@ -1,1 +1,19 @@
+#importamos librerias necesarias
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from pathlib import Path
+import pingouin as pg
+from lets_plot import *
+
+LetsPlot.setup_html(no_js=True)
+
+#importamos archivo csv
+url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
+
+df = pd.read_csv(url, skiprows=37)  # Ajusta skiprows según el contenido
+print(df.head())
+
+#grafico de linea con la anomalia de temperatura promedio y tiempo
 
