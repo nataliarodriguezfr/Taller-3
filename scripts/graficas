@@ -18,7 +18,6 @@ print(df.head())
 #grafico de linea con la anomalia de temperatura promedio y tiempo
 
 #grafico promedios de estacion
-# Seleccionar las columnas de estaciones
 estaciones = ['DJF', 'MAM', 'JJA', 'SON']
 
 plt.figure(figsize=(14,7))
@@ -33,10 +32,6 @@ plt.ylabel('Anomalía de temperatura (°C)')
 plt.legend(title='Estaciones')
 plt.grid(True)
 plt.show()
-
-
-#grafico con promedios de anomalias mensuales
-
 
 #Promedios anomalias anuales
 
