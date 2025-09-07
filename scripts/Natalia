@@ -21,43 +21,43 @@ LetsPlot.setup_html(no_js=True)
 url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
 
 df = pd.read_csv(url, skiprows=1, na_values="***")  # Ajusta skiprows según el contenido
-print(df.head())
+
+df = df.set_index("Year") #Pone los años como indices 
+
 
 #Graficar eligiendo un mes
 mes = "Oct"
-df_oct = df[["Year", mes]].dropna() #Para reducir la base de datos a solo año y octubre
-plt.figure(figsize=(12,6)) 
-plt.plot(df_oct["Year"], df_oct[mes], color="blue") #Grafica
-plt.xticks(np.arange(1880, 2025, 10))  # mostrar cada 10 años
-plt.title("Anomalías de temperatura en Octubre (1880 - 2025)")
-plt.xlabel("Año")
-plt.ylabel("Anomalía de temperatura (°C)")
-plt.grid(True, alpha=0.3)
-plt.legend()
+fig, ax = plt.subplots() #Me crea la base el plano donde se va a graficar
+df[mes].plot(ax=ax) #Me añade el mes de octubre al plano 
+ax.axhline(0, color="orange") #Linea promedio
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Anomalías de temperatura en Octubre (1880 - 2025)")
+ax.grid(True) #Para que salga la cuadricula
 plt.show()
+
 
 #Graficar promedio de estaciones
-estaciones = ["DJF", "MAM", "JJA", "SON"]    
-for estacion in estaciones:
-    plt.plot(df["Year"], df[estacion], label=estacion)
-
-plt.xticks(np.arange(1880, 2026, 20))  # mostrar cada 10 años
-plt.title('Anomalía de temperatura promedio por estación (1880 - 2025)')
-plt.xlabel('Año')
-plt.ylabel('Anomalía de temperatura (°C)')
-plt.legend(title='Estaciones')
-plt.grid(True)
+estaciones = ["DJF", "MAM", "JJA", "SON"] 
+fig, ax = plt.subplots()
+df[estaciones].plot(ax=ax)
+ax.axhline(0, color="orange")
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Anomalía de temperatura promedio por estación (1880 - 2025)")
+ax.grid(True)
 plt.show()
 
 
+   
 #Graficar promedios anuales
 prom_año = "J-D"
-plt.figure(figsize=(12,6)) 
-plt.plot(df["Year"], df[prom_año], color="red") #Grafica
-plt.xticks(np.arange(1880, 2025, 10))  # mostrar cada 10 años
-plt.title('Anomalía de temperatura promedio anuales (1880 - 2025)')
-plt.xlabel('Año')
-plt.ylabel('Anomalía de temperatura (°C)')
-plt.grid(True)
+fig, ax = plt.subplots()
+df[prom_año].plot(ax=ax)
+ax.axhline(0, color="orange")
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Anomalía de temperatura promedio anuales (1880 - 2025)")
+ax.grid(True)
 plt.show()
 
