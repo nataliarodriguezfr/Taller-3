@@ -1,0 +1,40 @@
+#1.2.3
+
+# Filtrar datos de 1951–1980 (columna J-D = promedio anual)
+df_periodo1 = df.loc[1951:1980, "J-D"].dropna()
+
+# Calcular deciles 3 y 7
+q3 = np.quantile(df_periodo1, 0.3)  # tercio inferior
+q7 = np.quantile(df_periodo1, 0.7)  # tercio superior
+print(f"Decil 3 (1951–1980): {q3:.3f}")
+print(f"Decil 7 (1951–1980): {q7:.3f}")
+
+
+#La respuesta obtenida en este numeral es la siguiente: Decil 3 (1951–1980): −0.063 °C ; Decil 7 (1951–1980): 0.083 °C
+
+
+
+#1.2.4
+df_periodo2 = df.loc[1981:2010, "J-D"].dropna()
+
+# Contar cuántos son calientes (≥ q7)
+n_total = len(df_periodo2)
+n_calientes = (df_periodo2 >= 0.083).sum()
+porcentaje_calientes = (n_calientes / n_total) * 100
+print(f"Anomalías calientes (1981–2010): {n_calientes} de {n_total}")
+print(f"Porcentaje de anomalías calientes: {porcentaje_calientes:.2f}%")
+
+
+
+#La respuesta obtenida en este numeral es la siguiente:Anomalías calientes (1981–2010): 27 de 30; 
+#Porcentaje de anomalías calientes: 90.00%
+#se interpreta de esta forma: se analizaron 30 años y en 27 años la temperatura estuvo por encima 
+# de 0.083 grados celsius(percentil 7).
+# las anomalías positivas (años más cálidos) se han vuelto la norma en lugar de la excepción.
+
+
+
+
+#1.2.5
+
+
