@@ -1,0 +1,73 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from pathlib import Path
+import pingouin as pg
+from lets_plot import *
+
+LetsPlot.setup_html(no_js=True)
+
+url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/27dc0c49a7210e59bf6dd7b73e1b85f8d8e44c59/data/raw_data/doing-economics-datafile-working-in-excel-project-1.xlsx"
+
+# Leer el Excel desde URL raw de GitHub
+fra = pd.read_excel(url, sheet_name='Sheet1')
+
+print(fra.head())
+
+#importamos archivo csv
+url2 = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
+
+df = pd.read_csv(url2, skiprows=1, na_values="***")  # Ajusta skiprows según el contenido
+
+df = df.set_index("Year") #Pone los años como indices 
+
+
+
+# Filtramos datos desde 1960 en adelante
+df_filtrado = fra[(fra['Year'] > 1959)].copy()
+
+# Crear una columna datetime para el eje x
+df_filtrado['Fecha'] = pd.to_datetime(dict(year=df_filtrado['Year'], month=df_filtrado['Month'], day=1))
+
+
+#graficar
+
+plt.figure(figsize=(12,6))
+
+plt.plot(df_filtrado['Fecha'], df_filtrado['Interpolated'], label='Interpolated', color='blue')
+plt.plot(df_filtrado['Fecha'], df_filtrado['Trend'], label='Trend', color='red')
+
+plt.title('Niveles de CO₂ (Interpolated y Trend) desde enero de 1960')
+plt.xlabel('Tiempo')
+plt.ylabel('Niveles de CO₂ (ppm)')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+import matplotlib.pyplot as plt
+
+mes = "Oct"  # Cambia por el mes que quieras
+
+# Asumiendo que tienes los DataFrames 'df_anom' y 'df_co2' ya cargados y con las columnas correctas
+anom_temperatura = df[mes]
+df_co2_mes = fra[fra['Month'] == 10]  # Octubre = 10
+
+# Crear DataFrame combinado y eliminar filas con NaN
+data = pd.DataFrame({
+    "Anom_Temp": anom_temperatura,
+    "CO2_Trend": df_co2_mes.set_index('Year')['Trend']
+}).dropna()
+
+# Graficar dispersión
+plt.figure(figsize=(8,6))
+plt.scatter(data["Anom_Temp"], data["CO2_Trend"], alpha=0.7)
+plt.xlabel("Anomalía de temperatura (°C)")
+plt.ylabel("Tendencia CO₂ (ppm)")
+plt.title(f"Dispersión CO₂ vs Anomalía de Temperatura en {mes}")
+plt.grid(True)
+plt.show()
+
+
+
