@@ -36,5 +36,45 @@ print(f"Porcentaje de anomalías calientes: {porcentaje_calientes:.2f}%")
 
 
 #1.2.5
+periodos = {
+    "1921-1950": (1921, 1950),
+    "1951-1980": (1951, 1980),
+    "1981-2010": (1981, 2010)
+}
+
+estaciones = ["DJF", "MAM", "JJA", "SON"]
+
+# Crear tabla de resultados
+resultados = {}
+
+for nombre, (inicio, fin) in periodos.items():
+    subset = df.loc[inicio:fin, estaciones].dropna()
+    medias = subset.mean()
+    varianzas = subset.var()
+    resultados[nombre] = pd.DataFrame({
+        "Media": medias,
+        "Varianza": varianzas
+    })
+
+# Unir en una sola tabla
+tabla_resultados = pd.concat(resultados, axis=1)
+print(tabla_resultados.round(3))
 
 
+
+#RESPUESTA OBTENIDA
+1921-1950          1951-1980          1981-2010         
+        Media Varianza     Media Varianza     Media Varianza
+DJF    -0.042    0.057    -0.002    0.050     0.522    0.079
+MAM    -0.056    0.031     0.000    0.025     0.509    0.075
+JJA    -0.066    0.022     0.001    0.015     0.399    0.068
+SON     0.068    0.028    -0.001    0.026     0.427    0.111
+
+#INTERPRETACION
+# Con respecto a las medias : En los primeros dos periodos (1921–1950 y 1951–1980), las medias están cerca de 0 o negativas,
+# lo que indica temperaturas relativamente estables o frías respecto al promedio 1951–1980. En 1981–2010, las medias aumentan
+# fuertemente en todas las estaciones (entre 0.399 y 0.522 °C), lo que muestra un claro calentamiento global.
+# Ahora , las varianzas, entre 1921–1950 y 1951–1980, las varianzas tienden a disminuir un poco .
+# En 1981–2010, todas las estaciones muestran un salto en la varianza .
+# En conclusión , no solo las temperaturas son más altas, sino también más variables, lo cual está asociado con mayor 
+# frecuencia de extremos climáticos.
