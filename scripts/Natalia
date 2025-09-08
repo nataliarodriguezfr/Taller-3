@@ -61,3 +61,55 @@ ax.set_title("Anomalía de temperatura promedio anuales (1880 - 2025)")
 ax.grid(True)
 plt.show()
 
+#---------------------------------Parte 1.2----------------------------------#
+
+
+df["Periodo"] = pd.cut(
+    df.index,
+    bins=[1950, 1980, 2010],  # Limites exactos de los periodos
+    labels=["1951-1980", "1981-2010"],
+    right=True
+)
+# Extraer las anomalías anuales junto con el período
+anual = (
+    df[["J-D", "Periodo"]]
+    .dropna()
+    .rename(columns={"J-D": "Anomalia"})
+    .reset_index()  # Esto recupera el año como columna
+)
+def crear_tabla_frecuencia_por_periodo(df_anual, periodo, paso=0.05):
+    data = df_anual.loc[df_anual["Periodo"] == periodo, "Anomalia"].dropna()
+    minimo, maximo = data.min(), data.max()
+    bins = np.arange(np.floor(minimo * 20) / 20, np.ceil(maximo * 20) / 20 + paso, paso)
+    etiquetas = [f"{b:.2f} – {b + paso:.2f}" for b in bins[:-1]]
+    categorias = pd.cut(data, bins=bins, labels=etiquetas, right=False)
+    frecuencias = categorias.value_counts().reindex(etiquetas, fill_value=0)
+
+    return pd.DataFrame({
+        "Rango de anomalía (°C)": etiquetas,
+        "Frecuencia": frecuencias.values
+    })
+
+tabla_1951_1980 = crear_tabla_frecuencia_por_periodo(anual, "1951-1980")
+tabla_1981_2010 = crear_tabla_frecuencia_por_periodo(anual, "1981-2010")
+
+print("Tabla de frecuencia: 1951–1980")
+print(tabla_1951_1980)
+
+print("\nTabla de frecuencia: 1981–2010")
+print(tabla_1981_2010)
+
+periodos = ["1951-1980", "1981-2010"]
+fig, axes = plt.subplots(ncols=2, figsize=(12,4), sharey=True)
+
+for ax, per in zip(axes, periodos):
+    data = anual.loc[anual["Periodo"] == per, "Anomalia"].dropna()
+    ax.hist(data, bins=10, edgecolor="black")
+    ax.set_title(per)
+    ax.set_xlabel("Anomalía (°C)")
+    if ax is axes[0]:
+        ax.set_ylabel("Frecuencia")
+
+fig.suptitle("Distribución anual de anomalías por período")
+plt.tight_layout()
+plt.show()
