@@ -7,67 +7,69 @@ from lets_plot import *
 
 LetsPlot.setup_html(no_js=True)
 
-url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/27dc0c49a7210e59bf6dd7b73e1b85f8d8e44c59/data/raw_data/doing-economics-datafile-working-in-excel-project-1.xlsx"
+#data NASA
+url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
 
-# Leer el Excel desde URL raw de GitHub
-fra = pd.read_excel(url, sheet_name='Sheet1')
-
-print(fra.head())
-
-#importamos archivo csv
-url2 = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
-
-df = pd.read_csv(url2, skiprows=1, na_values="***")  # Ajusta skiprows según el contenido
+df = pd.read_csv(url, skiprows=1, na_values="***")  # Ajusta skiprows según el contenido
 
 df = df.set_index("Year") #Pone los años como indices 
 
+#data carbon emmisions
+urlco = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/809e9a05b666713ee63644f4cf6e50876938f7c3/data/raw_data/doing-economics-datafile-working-in-excel-project-1.csv"
+
+df_co2 = pd.read_csv(urlco)
+
+# Verifica las primeras filas
+print(df_co2.head())
+
+#scatterplot temperatura anomalies vs carbon amissions
+
+df_co2_june = df_co2.loc[df_co2["Month"] == 6]
+df_co2_june.head()
+
+df_temp_co2 = pd.merge(df_co2_june, df, on="Year")
+df_temp_co2[["Year", "Jun", "Trend"]].head()
+
+(
+    ggplot(df_temp_co2, aes(x="Jun", y="Trend"))
+    + geom_point(color="black", size=3)
+    + labs(
+        title="Scatterplot of temperature anomalies vs carbon dioxide emissions",
+        y="Carbon dioxide levels (trend, mole fraction)",
+        x="Temperature anomaly (degrees Celsius)",
+    )
+)
 
 
-# Filtramos datos desde 1960 en adelante
-df_filtrado = fra[(fra['Year'] > 1959)].copy()
+#correlation coefficient
 
-# Crear una columna datetime para el eje x
-df_filtrado['Fecha'] = pd.to_datetime(dict(year=df_filtrado['Year'], month=df_filtrado['Month'], day=1))
+df_temp_co2[["Jun", "Trend"]].corr(method="pearson")
 
+#june temperature anomalies
 
-#graficar
+(
+    ggplot(df_temp_co2, aes(x="Year", y="Jun"))
+    + geom_line(size=1)
+    + labs(
+        title="June temperature anomalies",
+    )
+    + scale_x_continuous(format="d")
+)
 
-plt.figure(figsize=(12,6))
+#second panel: june temperature anomalies and carbon emissions
 
-plt.plot(df_filtrado['Fecha'], df_filtrado['Interpolated'], label='Interpolated', color='blue')
-plt.plot(df_filtrado['Fecha'], df_filtrado['Trend'], label='Trend', color='red')
-
-plt.title('Niveles de CO₂ (Interpolated y Trend) desde enero de 1960')
-plt.xlabel('Tiempo')
-plt.ylabel('Niveles de CO₂ (ppm)')
-plt.legend()
-plt.grid(True)
-
-plt.tight_layout()
-plt.show()
-
-import matplotlib.pyplot as plt
-
-mes = "Oct"  # Cambia por el mes que quieras
-
-# Asumiendo que tienes los DataFrames 'df_anom' y 'df_co2' ya cargados y con las columnas correctas
-anom_temperatura = df[mes]
-df_co2_mes = fra[fra['Month'] == 10]  # Octubre = 10
-
-# Crear DataFrame combinado y eliminar filas con NaN
-data = pd.DataFrame({
-    "Anom_Temp": anom_temperatura,
-    "CO2_Trend": df_co2_mes.set_index('Year')['Trend']
-}).dropna()
-
-# Graficar dispersión
-plt.figure(figsize=(8,6))
-plt.scatter(data["Anom_Temp"], data["CO2_Trend"], alpha=0.7)
-plt.xlabel("Anomalía de temperatura (°C)")
-plt.ylabel("Tendencia CO₂ (ppm)")
-plt.title(f"Dispersión CO₂ vs Anomalía de Temperatura en {mes}")
-plt.grid(True)
-plt.show()
+base_plot = ggplot(df_temp_co2) + scale_x_continuous(format="d")
+plot_p = (
+    base_plot
+    + geom_line(aes(x="Year", y="Jun"), size=1)
+    + labs(title="June temperature anomalies")
+)
+plot_q = (
+    base_plot
+    + geom_line(aes(x="Year", y="Trend"), size=1)
+    + labs(title="Carbon dioxide emissions")
+)
+gggrid([plot_p, plot_q], ncol=2)
 
 
 
