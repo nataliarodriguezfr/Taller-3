@@ -4,7 +4,7 @@ Este repositorio contiene los ejercicios y soluciones del **Taller 3 de Doing Ec
 
 ---
 
-## Estructura del repositorio  
+### Estructura del repositorio  
 - **`data/`** → Contiene las bases de datos usadas en los ejercicios.  
   - **`data/raw/`** → Archivos originales.  
 - **`outputs/`** → Gráficos y resultados obtenidos.  
@@ -12,7 +12,7 @@ Este repositorio contiene los ejercicios y soluciones del **Taller 3 de Doing Ec
 
 ---
 
-## Autores  
+### Autores  
 - Natalia Rodríguez  
 - Juan Rusinque  
 - Gabriel Salcedo  
