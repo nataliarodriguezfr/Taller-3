@@ -71,5 +71,19 @@ plot_q = (
 )
 gggrid([plot_p, plot_q], ncol=2)
 
+#third panel: october temperature anomalies and carbon emissions
+
+base_plot_2 = ggplot(df_temp_co2) + scale_x_continuous(format="d")
+plot_p = (
+    base_plot_2
+    + geom_line(aes(x="Year", y="Oct"), size=1)
+    + labs(title="October temperature anomalies")
+)
+plot_q = (
+    base_plot_2
+    + geom_line(aes(x="Year", y="Trend"), size=1)
+    + labs(title="Carbon dioxide emissions")
+)
+gggrid([plot_p, plot_q], ncol=2)
 
 
