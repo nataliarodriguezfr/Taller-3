@@ -1,0 +1,55 @@
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from pathlib import Path
+import pingouin as pg
+from lets_plot import *
+
+LetsPlot.setup_html(no_js=True)
+
+#importamos archivo csv
+url = "https://raw.githubusercontent.com/nataliarodriguezfr/Taller-3/9f4d8aea5f1dc38cdab50e644f0316559f34d1a9/data/raw_data/tablas_temperatura.csv"
+
+df = pd.read_csv(url, skiprows=1, na_values="***")  # Ajusta skiprows según el contenido
+
+df = df.set_index("Year") #Pone los años como indices 
+
+#1.1.2 y 1.1.3
+#Graficar eligiendo un mes
+mes = "Oct"
+fig, ax = plt.subplots() #Me crea la base el plano donde se va a graficar
+df[mes].plot(ax=ax) #Me añade el mes de octubre al plano 
+ax.axhline(0, color="orange") #Linea promedio
+ax.annotate("Promedio de 1951—1980", xy=(0.66, -0.2), xycoords=("figure fraction", "data"))
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Promedio de anomalías de temperatura en Octubre (1880 - 2025)")
+ax.grid(True) #Para que salga la cuadricula
+plt.show()
+
+
+#Graficar promedio de estaciones
+estaciones = ["DJF", "MAM", "JJA", "SON"] 
+fig, ax = plt.subplots()
+df[estaciones].plot(ax=ax)
+ax.axhline(0, color="orange")
+ax.annotate("Promedio de 1951—1980", xy=(0.66, -0.2), xycoords=("figure fraction", "data"))
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Anomalía de temperatura promedio por estación (1880 - 2025)")
+ax.grid(True)
+plt.show()
+
+
+#Graficar promedios anuales
+prom_año = "J-D"
+fig, ax = plt.subplots()
+df[prom_año].plot(ax=ax)
+ax.axhline(0, color="orange")
+ax.annotate("Promedio de 1951—1980", xy=(0.66, -0.2), xycoords=("figure fraction", "data"))
+ax.set_ylabel("Anomalía de temperatura (°C)")
+ax.set_xlabel("Año")
+ax.set_title("Anomalía de temperatura promedio anuales (1880 - 2025)")
+ax.grid(True)
+plt.show()
